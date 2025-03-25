@@ -1,5 +1,5 @@
 // app/page.tsx
-import Image from "next/image";
+
 import TattooMachineCanvas from "@/components/TattooMachine"; 
 // ^ dopasuj ścieżkę, jeśli masz inny układ folderów
 
