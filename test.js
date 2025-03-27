@@ -1,2 +1,0 @@
-// zmiana testowa
-// zmiana testowa
