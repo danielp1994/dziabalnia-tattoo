@@ -2,7 +2,11 @@
 
 import React, { useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // styl kalendarza
+
+/* 1) Oryginalne style React Calendar */
+import "react-calendar/dist/Calendar.css";
+/* 2) Nasze modyfikacje w pliku z ciemnym motywem i klasą tile-selected */
+import "./CalendarDark.css";
 
 type UploadedImage = {
   file: File;
@@ -17,9 +21,16 @@ export default function Contact() {
   const [message, setMessage] = useState("");
   const [tattooDesc, setTattooDesc] = useState("");
   const [typedDate, setTypedDate] = useState("");
+
+  // Tablica wybranych dat
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+
+  // Pliki (obrazy) wrzucane w formularzu
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
+  // ---------------------------------
+  // Klikanie w kalendarz
+  // ---------------------------------
   const handleDayClick = (value: Date) => {
     setSelectedDates((prev) => {
       const exists = prev.some(
@@ -29,6 +40,7 @@ export default function Contact() {
           date.getDate() === value.getDate()
       );
       if (exists) {
+        // Usunięcie z tablicy
         return prev.filter(
           (date) =>
             !(
@@ -38,11 +50,16 @@ export default function Contact() {
             )
         );
       } else {
+        // Dodanie do tablicy
         return [...prev, value];
       }
     });
   };
 
+  // ---------------------------------
+  // Nadawanie klasy zaznaczonym dniom
+  // ---------------------------------
+  // Używamy osobnej klasy .tile-selected, zdefiniowanej w CalendarDark.css
   const tileClassName = ({ date, view }: { date: Date; view: string }) => {
     if (view === "month") {
       const isSelected = selectedDates.some(
@@ -52,16 +69,20 @@ export default function Contact() {
           selected.getDate() === date.getDate()
       );
       if (isSelected) {
-        return "bg-gray-700 text-white rounded-full";
+        return "tile-selected";
       }
     }
     return null;
   };
 
+  // ---------------------------------
+  // Upload plików (zdjęć)
+  // ---------------------------------
   const handleFilesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
     const filesArray = Array.from(e.target.files);
+    // Ograniczamy do plików typu image/*
     const validImages = filesArray.filter((file) =>
       file.type.startsWith("image/")
     );
@@ -82,12 +103,18 @@ export default function Contact() {
     });
   };
 
+  // ---------------------------------
+  // Obsługa wysyłania formularza
+  // ---------------------------------
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const dateStr = selectedDates
+    // Sortujemy daty rosnąco, potem tworzymy string
+    const dateStr = [...selectedDates]
+      .sort((a, b) => a.getTime() - b.getTime())
       .map((d) => d.toLocaleDateString())
       .join(", ");
+
     const filesStr = uploadedImages.map((img) => img.file.name).join(", ");
 
     alert(
@@ -99,8 +126,7 @@ Wiadomość: ${message}
 Opis tatuażu: ${tattooDesc}
 Terminy z kalendarza: ${dateStr}
 Termin wpisany: ${typedDate}
-Pliki: ${filesStr}
-`
+Pliki: ${filesStr}`
     );
   };
 
@@ -109,7 +135,6 @@ Pliki: ${filesStr}
       <h2 className="text-3xl font-bold mb-6">Formularz zgłoszeniowy</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-
         {/* Imię i Nazwisko */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
@@ -118,18 +143,19 @@ Pliki: ${filesStr}
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full p-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              className="w-full p-2 rounded bg-gray-800 text-gray-200 
+                         focus:outline-none focus:ring-2 focus:ring-gray-600"
               required
             />
           </div>
-
           <div className="flex-1">
             <label className="block mb-1 text-gray-200">Nazwisko (opcjonalne)</label>
             <input
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full p-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              className="w-full p-2 rounded bg-gray-800 text-gray-200 
+                         focus:outline-none focus:ring-2 focus:ring-gray-600"
             />
           </div>
         </div>
@@ -142,18 +168,19 @@ Pliki: ${filesStr}
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full p-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              className="w-full p-2 rounded bg-gray-800 text-gray-200 
+                         focus:outline-none focus:ring-2 focus:ring-gray-600"
               required
             />
           </div>
-
           <div className="flex-1">
             <label className="block mb-1 text-gray-200">Email (opcjonalnie)</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              className="w-full p-2 rounded bg-gray-800 text-gray-200 
+                         focus:outline-none focus:ring-2 focus:ring-gray-600"
             />
           </div>
         </div>
@@ -161,21 +188,26 @@ Pliki: ${filesStr}
         {/* Wiadomość i Opis tatuażu */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
-            <label className="block mb-1 text-gray-200">Wiadomość (opcjonalnie)</label>
+            <label className="block mb-1 text-gray-200">
+              Wiadomość (opcjonalnie)
+            </label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full p-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              className="w-full p-2 rounded bg-gray-800 text-gray-200 
+                         focus:outline-none focus:ring-2 focus:ring-gray-600"
               rows={3}
             />
           </div>
-
           <div className="flex-1">
-            <label className="block mb-1 text-gray-200">Opis tatuażu (opcjonalnie)</label>
+            <label className="block mb-1 text-gray-200">
+              Opis tatuażu (opcjonalnie)
+            </label>
             <textarea
               value={tattooDesc}
               onChange={(e) => setTattooDesc(e.target.value)}
-              className="w-full p-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              className="w-full p-2 rounded bg-gray-800 text-gray-200 
+                         focus:outline-none focus:ring-2 focus:ring-gray-600"
               rows={3}
             />
           </div>
@@ -189,7 +221,8 @@ Pliki: ${filesStr}
             value={typedDate}
             onChange={(e) => setTypedDate(e.target.value)}
             placeholder="np. 12.12.2025 godz. 14:00"
-            className="w-full p-2 rounded bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600"
+            className="w-full p-2 rounded bg-gray-800 text-gray-200 
+                       focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
           <p className="text-sm text-gray-400 mt-1">
             Możesz wpisać datę i godzinę ręcznie, jeśli nie ma jej w kalendarzu.
@@ -202,6 +235,9 @@ Pliki: ${filesStr}
           <div>
             <label className="block mb-1 text-gray-200">Wybierz terminy z kalendarza</label>
             <Calendar
+              // Wyłączamy domyślne zaznaczanie, by nie blokowało jednej daty
+              value={null}
+              selectRange={false}
               onClickDay={handleDayClick}
               tileClassName={tileClassName}
             />
@@ -212,9 +248,11 @@ Pliki: ${filesStr}
             <div className="flex-1 max-h-[320px] overflow-auto border border-gray-700 rounded p-3 text-gray-300">
               <h3 className="font-semibold mb-2">Wybrane terminy:</h3>
               <ul className="list-disc list-inside space-y-1">
-                {selectedDates.map((d, i) => (
-                  <li key={i}>{d.toLocaleDateString()}</li>
-                ))}
+                {[...selectedDates]
+                  .sort((a, b) => a.getTime() - b.getTime())
+                  .map((d, i) => (
+                    <li key={i}>{d.toLocaleDateString()}</li>
+                  ))}
               </ul>
             </div>
           )}
