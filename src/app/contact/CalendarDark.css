@@ -1,8 +1,6 @@
-/* CalendarDark.css */
-
 /* Główne tło kalendarza i tekst */
 .react-calendar {
-  background-color: #1E293B; /* granatowy ciemny */
+  background-color: #1E293B; /* główne ciemne tło */
   color: #E2E8F0; /* jasny tekst */
   border: 1px solid #475569;
   border-radius: 8px;
@@ -20,11 +18,23 @@
   margin: 2px;
   cursor: pointer;
 }
+/* Strzałki / nawigacja: hover – jaśniejszy */
 .react-calendar__navigation button:hover {
-  background-color: #334155;
+  background-color: #3A4654 !important; 
 }
 
-/* Dni tygodnia (PON, WT, etc.) */
+/* Strzałki nieaktywne (disabled) – brak zmiany koloru przy hover */
+.react-calendar__navigation button[disabled] {
+  background-color: #303B4C !important; 
+  color: #A3ABB6 !important;
+  cursor: not-allowed !important;
+}
+.react-calendar__navigation button[disabled]:hover {
+  background-color: #303B4C !important; 
+  color: #A3ABB6 !important;
+}
+
+/* Dni tygodnia (Pn, Wt, etc.) */
 .react-calendar__month-view__weekdays {
   text-align: center;
   font-weight: 600;
@@ -36,36 +46,49 @@
 /* Każdy kafelek w kalendarzu */
 .react-calendar__tile {
   background: transparent;
-  color: #cbd5e1; /* jasny tekst */
+  color: #cbd5e1; /* jasny tekst (slate-300) */
   border-radius: 4px;
   padding: 0.5rem 0;
   cursor: pointer;
 }
 
-/* Kafelek na hover */
+/* Hover kafelków (nie disabled) – jaśniejszy */
 .react-calendar__tile:hover {
-  background-color: #334155; /* ciemniejszy granat */
+  background-color: #3A4654 !important; 
 }
 
-/* Kafelki z datami spoza aktualnego miesiąca */
+/* Kafelki dat spoza aktualnego miesiąca */
 .react-calendar__month-view__days__day--neighboringMonth {
   color: #94a3b8; /* szarawy */
 }
 
-/* Kafelek z datą bieżącą (today) */
+/* Bieżąca data (today) – ciemniejszy granat */
 .react-calendar__tile--now {
-  background: #2D3748 !important; /* ciemny szary / granat (Tailwind: bg-gray-700-ish) */
-  color: #E2E8F0 !important;     /* jasny tekst (Tailwind: text-gray-200) */
+  background: #5a6d8f !important; 
+  color: #E2E8F0 !important;
 }
 
-/* Kafelek, który react-calendar normalnie by traktował jako aktywny */
-.react-calendar__tile--active {
-  /* Wyłączamy domyślne stylowanie, bo value={null} */
-  background-color: transparent !important;
-  color: inherit !important;
+/* 
+   Przeszłe daty (disabled) – minimalnie jaśniejsze od .tile--now,
+   ale nie reagują na hover
+*/
+.react-calendar__tile--disabled,
+.react-calendar__tile[disabled],
+.react-calendar__month-view__days__day[disabled] {
+  background-color: #303B4C !important;
+  color: #A3ABB6 !important;
+  cursor: not-allowed !important;
+}
+/* Brak zmiany na hover dla disabled kafelków */
+.react-calendar__tile--disabled:hover,
+.react-calendar__tile[disabled]:hover,
+.react-calendar__month-view__days__day[disabled]:hover {
+  background-color: #303B4C !important; 
+  color: #A3ABB6 !important;
 }
 
-/* Kafelki z rangeStart, rangeEnd itp. - wyłącz */
+/* Wyłącz 'active' (bo value={null}) */
+.react-calendar__tile--active,
 .react-calendar__tile--rangeStart,
 .react-calendar__tile--rangeEnd,
 .react-calendar__tile--rangeBothEnds {
@@ -73,11 +96,9 @@
   color: inherit !important;
 }
 
-/* KLASA do multi-select:
-   Będzie nadawana w tileClassName, 
-   dzięki czemu wyróżnimy każdy kliknięty termin. */
+/* Wybrane przez ciebie dni (multi-select) */
 .tile-selected {
-  background-color: #3b82f6 !important; /* intensywny niebieski */
+  background-color: #3b82f6 !important; 
   color: #fff !important;
-  border-radius: 9999px !important; /* w stylu tailwind 'rounded-full' */
+  border-radius: 9999px !important; 
 }
