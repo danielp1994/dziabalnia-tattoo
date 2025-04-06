@@ -229,6 +229,8 @@ Pliki: ${filesStr}`
             <Calendar
               value={null}
               selectRange={false}
+              // WYKLUCZ daty wcześniejsze niż dziś
+              minDate={new Date()}
               onClickDay={handleDayClick}
               tileClassName={tileClassName}
             />
@@ -240,10 +242,6 @@ Pliki: ${filesStr}`
                             max-h-[310px] overflow-auto mt-7">
               <h3 className="font-semibold mb-2">Wybrane terminy:</h3>
 
-              {/* 
-                Używamy 'columns-2' (Tailwind) + kolumny w stylu 'column-gap' 
-                Każda kolumna wypełnia się w dół, potem kolejna 
-              */}
               <ul className="columns-2 [column-gap:2rem]">
                 {[...selectedDates]
                   .sort((a, b) => a.getTime() - b.getTime())
@@ -254,7 +252,8 @@ Pliki: ${filesStr}`
                     const dateText = d.toLocaleDateString("pl-PL");
                     return (
                       <li key={i} className="mb-2 break-inside-avoid">
-                        {dateText} <span className="text-sm text-gray-400">({day})</span>
+                        {dateText}{" "}
+                        <span className="text-sm text-gray-400">({day})</span>
                       </li>
                     );
                   })}
