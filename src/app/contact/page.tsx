@@ -28,9 +28,7 @@ export default function Contact() {
   // Pliki (obrazy) wrzucane w formularzu
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
-  // ---------------------------------
-  // Klikanie w kalendarz
-  // ---------------------------------
+  // Klikanie w kalendarzu
   const handleDayClick = (value: Date) => {
     setSelectedDates((prev) => {
       const exists = prev.some(
@@ -40,7 +38,7 @@ export default function Contact() {
           date.getDate() === value.getDate()
       );
       if (exists) {
-        // Usunięcie z tablicy
+        // Usuń z tablicy
         return prev.filter(
           (date) =>
             !(
@@ -50,16 +48,13 @@ export default function Contact() {
             )
         );
       } else {
-        // Dodanie do tablicy
+        // Dodaj do tablicy
         return [...prev, value];
       }
     });
   };
 
-  // ---------------------------------
   // Nadawanie klasy zaznaczonym dniom
-  // ---------------------------------
-  // Używamy osobnej klasy .tile-selected, zdefiniowanej w CalendarDark.css
   const tileClassName = ({ date, view }: { date: Date; view: string }) => {
     if (view === "month") {
       const isSelected = selectedDates.some(
@@ -69,20 +64,17 @@ export default function Contact() {
           selected.getDate() === date.getDate()
       );
       if (isSelected) {
-        return "tile-selected";
+        return "tile-selected"; 
       }
     }
     return null;
   };
 
-  // ---------------------------------
-  // Upload plików (zdjęć)
-  // ---------------------------------
+  // Upload plików
   const handleFilesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
     const filesArray = Array.from(e.target.files);
-    // Ograniczamy do plików typu image/*
     const validImages = filesArray.filter((file) =>
       file.type.startsWith("image/")
     );
@@ -103,16 +95,20 @@ export default function Contact() {
     });
   };
 
-  // ---------------------------------
-  // Obsługa wysyłania formularza
-  // ---------------------------------
+  // Wysyłanie formularza
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Sortujemy daty rosnąco, potem tworzymy string
-    const dateStr = [...selectedDates]
-      .sort((a, b) => a.getTime() - b.getTime())
-      .map((d) => d.toLocaleDateString())
+    // Sortujemy daty rosnąco
+    const sortedDates = [...selectedDates].sort((a, b) => a.getTime() - b.getTime());
+
+    // Tworzymy string z dat + dnia tygodnia (skrót)
+    const dateStr = sortedDates
+      .map((d) => {
+        const day = d.toLocaleDateString("pl-PL", { weekday: "short" }); 
+        const dateText = d.toLocaleDateString("pl-PL"); 
+        return `${dateText} (${day})`;
+      })
       .join(", ");
 
     const filesStr = uploadedImages.map((img) => img.file.name).join(", ");
@@ -188,9 +184,7 @@ Pliki: ${filesStr}`
         {/* Wiadomość i Opis tatuażu */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
-            <label className="block mb-1 text-gray-200">
-              Wiadomość (opcjonalnie)
-            </label>
+            <label className="block mb-1 text-gray-200">Wiadomość (opcjonalnie)</label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -200,9 +194,7 @@ Pliki: ${filesStr}`
             />
           </div>
           <div className="flex-1">
-            <label className="block mb-1 text-gray-200">
-              Opis tatuażu (opcjonalnie)
-            </label>
+            <label className="block mb-1 text-gray-200">Opis tatuażu (opcjonalnie)</label>
             <textarea
               value={tattooDesc}
               onChange={(e) => setTattooDesc(e.target.value)}
@@ -235,7 +227,6 @@ Pliki: ${filesStr}`
           <div>
             <label className="block mb-1 text-gray-200">Wybierz terminy z kalendarza</label>
             <Calendar
-              // Wyłączamy domyślne zaznaczanie, by nie blokowało jednej daty
               value={null}
               selectRange={false}
               onClickDay={handleDayClick}
@@ -243,16 +234,30 @@ Pliki: ${filesStr}`
             />
           </div>
 
-          {/* Lista wybranych dni */}
+          {/* Lista wybranych dni - kolumny pionowe */}
           {selectedDates.length > 0 && (
-            <div className="flex-1 max-h-[320px] overflow-auto border border-gray-700 rounded p-3 text-gray-300">
+            <div className="flex-1 border border-gray-700 rounded p-3 text-gray-300 
+                            max-h-[310px] overflow-auto mt-7">
               <h3 className="font-semibold mb-2">Wybrane terminy:</h3>
-              <ul className="list-disc list-inside space-y-1">
+
+              {/* 
+                Używamy 'columns-2' (Tailwind) + kolumny w stylu 'column-gap' 
+                Każda kolumna wypełnia się w dół, potem kolejna 
+              */}
+              <ul className="columns-2 [column-gap:2rem]">
                 {[...selectedDates]
                   .sort((a, b) => a.getTime() - b.getTime())
-                  .map((d, i) => (
-                    <li key={i}>{d.toLocaleDateString()}</li>
-                  ))}
+                  .map((d, i) => {
+                    const day = d.toLocaleDateString("pl-PL", {
+                      weekday: "short",
+                    });
+                    const dateText = d.toLocaleDateString("pl-PL");
+                    return (
+                      <li key={i} className="mb-2 break-inside-avoid">
+                        {dateText} <span className="text-sm text-gray-400">({day})</span>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
           )}
