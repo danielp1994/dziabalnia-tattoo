@@ -1,7 +1,4 @@
-// app/page.tsx
-
 import TattooMachineCanvas from "@/components/TattooMachine"; 
-// ^ dopasuj ścieżkę, jeśli masz inny układ folderów
 
 export default function Home() {
   return (
@@ -16,16 +13,16 @@ export default function Home() {
 
       {/* Główna treść */}
       <div className="relative z-10 max-w-5xl mx-auto p-8 text-center flex flex-col gap-6 items-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-white">
+        <h1 className="text-5xl md:text-7xl font-rocker text-white">
           Witaj w mrocznym świecie tatuaży
         </h1>
-        <p className="text-gray-400 max-w-2xl">
+        <p className="text-gray-400 font-rocker max-w-2xl">
           Zapraszamy do zapoznania się z naszym portfolio. Tu spełniamy najbardziej odważne wizje – od delikatnych wzorów aż po ciemne, mroczne motywy.
         </p>
         <div>
           <a
             href="/portfolio"
-            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-md transition-all"
+            className="font-rocker bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-md transition-all"
           >
             Zobacz portfolio
           </a>

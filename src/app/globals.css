@@ -1,14 +1,27 @@
-@import "tailwindcss";
+@import "tailwindcss"; /* Jeśli potrzebujesz tej linii – choć współczesne projekty zwykle korzystają z konfiguracji PostCSS */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* === Własne fonty === */
+@font-face {
+  font-family: 'new_rockerregular';
+  src: url('/fonts/newrocker-regular-webfont.woff2') format('woff2'),
+       url('/fonts/newrocker-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
+@font-face {
+  font-family: 'kaushan_scriptregular';
+  src: url('/fonts/kaushanscript-regular-webfont.woff2') format('woff2'),
+       url('/fonts/kaushanscript-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* === Zmienne kolorów === */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -21,23 +34,22 @@
   }
 }
 
+/* === Globalny styl strony === */
 body {
+  /* Usuwamy wcześniejsze przypisanie czcionki */
+  font-family: 'new_rockerregular', cursive !important;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-/* globals.css */
-
-/* Reset tailwind i bazowe style */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Dodajemy bazowe kolory tła i tekstu */
-body {
-  @apply bg-gray-900 text-gray-100;
-  font-family: sans-serif;
+  @apply bg-gray-900 text-gray-100 font-sans;
   margin: 0;
   padding: 0;
+}
+
+/* === Niestandardowe klasy do fontów (opcjonalnie) === */
+.font-rocker {
+  font-family: 'new_rockerregular', cursive;
+}
+
+.font-kaushan {
+  font-family: 'kaushan_scriptregular', cursive;
 }
