@@ -17,7 +17,7 @@ export default function Home() {
           Witaj w mrocznym świecie tatuaży
         </h1>
         <p className="text-gray-400 font-rocker max-w-2xl">
-          Zapraszamy do zapoznania się z naszym portfolio. Tu spełniamy najbardziej odważne wizje – od delikatnych wzorów aż po ciemne, mroczne motywy.
+          Zapraszamy do zapoznania się z naszym portfolio. Tu spełniamy najbardziej odważne wizje –<br /> od delikatnych wzorów aż po ciemne, mroczne motywy.
         </p>
         <div>
           <a
